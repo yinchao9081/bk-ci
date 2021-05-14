@@ -82,6 +82,7 @@ import com.tencent.devops.store.pojo.common.KEY_MODIFIER
 import com.tencent.devops.store.pojo.common.KEY_PUBLISHER
 import com.tencent.devops.store.pojo.common.KEY_PUB_TIME
 import com.tencent.devops.store.pojo.common.KEY_UPDATE_TIME
+import com.tencent.devops.store.pojo.common.KEY_VERSION
 import com.tencent.devops.store.pojo.common.LATEST
 import com.tencent.devops.store.pojo.common.MarketItem
 import com.tencent.devops.store.pojo.common.STORE_IMAGE_STATUS
@@ -1060,12 +1061,12 @@ abstract class ImageService @Autowired constructor() {
         var tmpVersionPrefix = ""
         versionRecords?.forEach {
             // 通用处理
-            val imageVersion = it["version"] as String
+            val imageVersion = it[KEY_VERSION] as String
             val index = imageVersion.indexOf(".")
             val versionPrefix = imageVersion.substring(0, index + 1)
             var versionName = imageVersion
             var latestVersionName = "${versionPrefix}latest"
-            val imageStatus = it["imageStatus"] as Byte
+            val imageStatus = it[KEY_IMAGE_STATUS] as Byte
             val imageVersionStatusList = listOf(
                 ImageStatusEnum.TESTING.status.toByte(),
                 ImageStatusEnum.UNDERCARRIAGING.status.toByte(),
@@ -1084,9 +1085,9 @@ abstract class ImageService @Autowired constructor() {
                 versionList.add(VersionInfo(latestVersionName, "$versionPrefix*")) // 添加大版本号的通用最新模式（如1.*）
                 tmpVersionPrefix = versionPrefix
             }
+            versionName = "$versionName (${it[KEY_IMAGE_TAG]})"
             versionList.add(VersionInfo(versionName, imageVersion)) // 添加具体的版本号
         }
-        logger.info("the imageCode is: $imageCode,versionList is: $versionList")
         return versionList
     }
 

@@ -53,6 +53,7 @@ import com.tencent.devops.store.pojo.common.KEY_CREATE_TIME
 import com.tencent.devops.store.pojo.common.KEY_CREATOR
 import com.tencent.devops.store.pojo.common.KEY_MODIFIER
 import com.tencent.devops.store.pojo.common.KEY_UPDATE_TIME
+import com.tencent.devops.store.pojo.common.KEY_VERSION
 import com.tencent.devops.store.pojo.common.enums.StoreProjectTypeEnum
 import com.tencent.devops.store.pojo.common.enums.StoreTypeEnum
 import com.tencent.devops.store.pojo.image.enums.ImageAgentTypeEnum
@@ -751,10 +752,10 @@ class ImageDao {
         val tImageFeature = TImageFeature.T_IMAGE_FEATURE.`as`("tImageFeature")
         val b = TStoreProjectRel.T_STORE_PROJECT_REL.`as`("b")
         val t = dslContext.select(
-            a.VERSION.`as`("version"),
-            a.IMAGE_TAG.`as`("imageTag"),
-            a.CREATE_TIME.`as`("createTime"),
-            a.IMAGE_STATUS.`as`("imageStatus")
+            a.VERSION.`as`(KEY_VERSION),
+            a.IMAGE_TAG.`as`(KEY_IMAGE_TAG),
+            a.CREATE_TIME.`as`(KEY_CREATE_TIME),
+            a.IMAGE_STATUS.`as`(KEY_IMAGE_STATUS)
         ).from(a).join(tImageFeature).on(a.IMAGE_CODE.eq(tImageFeature.IMAGE_CODE))
             .where(
                 a.IMAGE_CODE.eq(imageCode).and(tImageFeature.PUBLIC_FLAG.eq(true)).and(
@@ -765,10 +766,10 @@ class ImageDao {
             )
             .union(
                 dslContext.select(
-                    a.VERSION.`as`("version"),
-                    a.IMAGE_TAG.`as`("imageTag"),
-                    a.CREATE_TIME.`as`("createTime"),
-                    a.IMAGE_STATUS.`as`("imageStatus")
+                    a.VERSION.`as`(KEY_VERSION),
+                    a.IMAGE_TAG.`as`(KEY_IMAGE_TAG),
+                    a.CREATE_TIME.`as`(KEY_CREATE_TIME),
+                    a.IMAGE_STATUS.`as`(KEY_IMAGE_STATUS)
                 ).from(a).join(b).on(a.IMAGE_CODE.eq(b.STORE_CODE))
                     .join(tImageFeature).on(a.IMAGE_CODE.eq(tImageFeature.IMAGE_CODE))
                     .where(
